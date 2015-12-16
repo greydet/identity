@@ -32,7 +32,7 @@ if ($rep->isSuccess())
     mail($to, $subject, $message, $headers);
 
     header('Content-Description: File Transfer');
-    header('Content-Type: text/plain');
+    header('Content-Type: application/pdf');
     header('Content-Disposition: attachment; filename="'.basename($file).'"');
     header('Expires: 0');
     header('Cache-Control: must-revalidate');
