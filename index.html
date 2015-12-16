@@ -16,6 +16,9 @@
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+        <script src="assets/js/jquery-1.11.3.min.js"></script>
+        <script src="assets/js/jquery.validate.min.js"></script>
+        <script src='https://www.google.com/recaptcha/api.js'></script>
 	</head>
 	<body class="is-loading">
 
@@ -30,53 +33,62 @@
 							<p>Ingénieur système embarqué confirmé<br/>
 							Responsable projet</p>
 						</header>
-						<!--
-						<hr />
-						<h2>Extra Stuff!</h2>
-						<form method="post" action="#">
-							<div class="field">
-								<input type="text" name="name" id="name" placeholder="Name" />
-							</div>
-							<div class="field">
-								<input type="email" name="email" id="email" placeholder="Email" />
-							</div>
-							<div class="field">
-								<div class="select-wrapper">
-									<select name="department" id="department">
-										<option value="">Department</option>
-										<option value="sales">Sales</option>
-										<option value="tech">Tech Support</option>
-										<option value="null">/dev/null</option>
-									</select>
-								</div>
-							</div>
-							<div class="field">
-								<textarea name="message" id="message" placeholder="Message" rows="4"></textarea>
-							</div>
-							<div class="field">
-								<input type="checkbox" id="human" name="human" /><label for="human">I'm a human</label>
-							</div>
-							<div class="field">
-								<label>But are you a robot?</label>
-								<input type="radio" id="robot_yes" name="robot" /><label for="robot_yes">Yes</label>
-								<input type="radio" id="robot_no" name="robot" /><label for="robot_no">No</label>
-							</div>
-							<ul class="actions">
-								<li><a href="#" class="button">Get Started</a></li>
-							</ul>
-						</form>
-						<hr />
-						-->
 						<footer>
 							<ul class="icons">
 								<li class="simptip-position-bottom" data-tooltip="Viadeo"><a href="http://fr.viadeo.com/fr/profile/gonzague.reydet" target="_blank" class="socicon-viadeo">Viadeo</a></li>
 								<li class="simptip-position-bottom" data-tooltip="Linkedin"><a href="https://fr.linkedin.com/in/gonzaguereydet" target="_blank" class="fa-linkedin">Linkedin</a></li>
-								<li class="simptip-position-bottom" data-tooltip="CV"><a href="doc/greydet.pdf" target="_blank" class="fa-file-pdf-o">CV</a></li>
+								<li class="simptip-position-bottom" data-tooltip="CV"><a href="#cvDLForm" class="fa-file-pdf-o">CV</a></li>
 							</ul>
 							<ul class="icons">
 								<li class="simptip-position-bottom" data-tooltip="Github"><a href="http://github.com/greydet" target="_blank" class="fa-github">Github</a></li>
 								<li class="simptip-position-bottom" data-tooltip="Stack-overflow"><a href="http://stackoverflow.com/users/2622924/greydet" target="_blank" class="fa-stack-overflow">Stack-overflow</a></li>
 							</ul>
+
+                            <div id="cvDLForm" class="modalDialog">
+                            <div>
+                            <a href="#close" title="Close" class="close">X</a>
+                            <h2>CV - Gonzague REYDET</h2>
+                            <hr />
+                            <p>Formulaire de t&eacute;l&eacute;chargement</p>
+                            <form action="dlcv.php" action="post" id="dlcvf">
+                                <div class="field">
+                                    <input type="email" name="email" id="email" placeholder="Email" required/>
+                                </div>
+                                <div class="field">
+                                    <div class="g-recaptcha" data-sitekey="6LcbMBMTAAAAAOwa0v_gQVDUALPGQDBLZYDy6lQ5"></div>
+                                    <input type="hidden" class="hiddenRecaptcha required" name="hiddenRecaptcha" id="hiddenRecaptcha">
+                                </div>
+                                <div class="field">
+                                    <input type="submit" id="submit" name="submit" value="T&eacute;l&eacute;charger" />
+                                </div>
+                            </form>
+                            <script>
+                            $("#dlcvf").validate({
+                                ignore: [],
+                                rules: {
+                                    "hiddenRecaptcha": {
+                                        required: function() {
+                                            if(grecaptcha.getResponse() == '') {
+                                                return true;
+                                            } else {
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                },
+                                debug: true,
+                                submitHandler: function(form) {
+                                    var dForm = $('<form></form>').attr('action', 'dlcv.php').attr('method', 'post');
+                                    dForm.append($('<input></input>').attr('type','hidden').attr('name', 'email').attr('value',$(form).find('input[name=\'email\']').val()));
+                                    dForm.append($('<input></input>').attr('type','hidden').attr('name', 'recaptchaRep').attr('value', grecaptcha.getResponse()));
+                                    dForm.appendTo('body').submit().remove();
+                                    grecaptcha.reset();
+                                    window.location.href = "#close";
+                                }
+                            });
+                            </script>
+                            </div>
+                            </div>
 						</footer>
 					</section>
 
@@ -97,16 +109,16 @@
 					window.addEventListener('load', function() { document.body.className = document.body.className.replace(/\bis-loading\b/, ''); });
 					document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
 				}
-			</script>
+            </script>
 
-			<script>
-			  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-			  	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-			  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+            <script>
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-			  ga('create', 'UA-70912505-1', 'auto');
-			  ga('send', 'pageview');
+                ga('create', 'UA-70912505-1', 'auto');
+                ga('send', 'pageview');
 			</script>
 	</body>
 </html>

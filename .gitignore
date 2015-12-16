@@ -1,0 +1,3 @@
+prv/*
+!prv/.htaccess
+!prv/config.example.inc.php
